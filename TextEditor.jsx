@@ -347,7 +347,7 @@ function createHttpClient(logger) {
                 duration: duration + "ms"
             });
 
-            alert("💥 CURL REQUEST FAILED\n\nError: " + error.toString() + "\nDuration: " + duration + "ms");
+            // CURL request failed
 
             return {
                 success: false,
@@ -361,7 +361,7 @@ function createHttpClient(logger) {
 
     return {
         post: function(url, data, headers) {
-            alert("🔍 HTTP CLIENT STARTING\n\n🌐 Using system curl for HTTPS support\n\nExtendScript Socket limitation: No SSL/TLS\nSolution: System curl calls");
+            // HTTP client starting with CURL
 
             logger.info("HTTP_CLIENT_METHOD", "Using curl for HTTPS requests", {
                 url: url,
@@ -470,7 +470,7 @@ function downloadVideo(videoUrl, logger) {
             commandLength: curlCmd.length
         });
 
-        alert("📥 DOWNLOADING VIDEO\n\nFilename: " + filename + "\nLocation: " + videoFile.fsName + "\n\nThis may take a moment...");
+        // Downloading video
 
         // Execute download
         var downloadResult = system.callSystem(curlCmd);
@@ -523,7 +523,7 @@ function downloadVideo(videoUrl, logger) {
 
         // File validation passed - get final size for display
         var fileSize = videoFile.length;
-        alert("✅ VIDEO DOWNLOADED\n\nFile: " + filename + "\nSize: " + Math.round(fileSize/1024) + " KB\nTime: " + Math.round(downloadDuration/1000) + " seconds");
+        // Video downloaded successfully
 
         logger.info("VIDEO_DOWNLOAD_SUCCESS", "Video downloaded successfully", {
             filename: filename,
@@ -600,7 +600,7 @@ function createPermanentVideoFile(tempVideoFile, logger) {
             });
         }
 
-        alert("📁 VIDEO SAVED PERMANENTLY\n\nLocation: Desktop\nFile: " + permanentFilename + "\nSize: " + Math.round(permanentFileSize/1024) + " KB\n\nThis file will remain accessible to After Effects.");
+        // Video saved permanently to Desktop
 
         return permanentFile;
 
@@ -668,7 +668,7 @@ function importVideoToProject(videoFile, logger) {
             footageHeight: footageItem.height
         });
 
-        alert("📁 VIDEO IMPORTED\n\nName: " + footageItem.name + "\nDuration: " + Math.round(footageItem.duration * 100) / 100 + " seconds\nResolution: " + footageItem.width + "x" + footageItem.height);
+        // Video imported successfully
 
         return footageItem;
 
@@ -740,7 +740,7 @@ function createVideoLayer(videoUrl, layerName, prompt, logger) {
             videoFile: permanentVideoFile.fsName
         });
 
-        alert("🎬 VIDEO LAYER CREATED!\n\nLayer: " + videoLayer.name + "\nIndex: " + videoLayer.index + "\nDuration: " + Math.round(footageItem.duration * 100) / 100 + " seconds" + (uniformScale !== 100 ? "\nScaled: " + Math.round(uniformScale) + "%" : "") + "\n\n📁 Video file saved to Desktop for permanent access!");
+        // Video layer created and ready
 
         return videoLayer;
 
@@ -807,14 +807,7 @@ function runFalVideoGenerator() {
     }
 
     // Critical system requirements check
-    alert("🔧 SYSTEM REQUIREMENTS CHECK\n\n" +
-          "To make HTTP requests, After Effects needs:\n\n" +
-          "1. ☑ Allow Scripts to Write Files and Access Network\n" +
-          "   (Edit > Preferences > Scripting & Expressions)\n\n" +
-          "2. ☑ Network connectivity\n\n" +
-          "3. ⚠️ LIMITATION: ExtendScript Socket doesn't support HTTPS/SSL\n" +
-          "   This means requests to HTTPS URLs may fail\n\n" +
-          "Click OK to continue with the test...");
+    // System requirements checked
 
     // Test network permissions with correct ExtendScript syntax
     try {
@@ -826,9 +819,9 @@ function runFalVideoGenerator() {
         testFile.write("test");
         testFile.close();
         testFile.remove();
-        alert("✅ FILE WRITE PERMISSION: OK\n\nNetwork access is properly enabled!");
+        // File write permission OK
     } catch (e) {
-        alert("❌ FILE WRITE PERMISSION: FAILED\n\nError: " + e.toString() + "\n\nEven though you have the setting enabled, ExtendScript might have path issues.\n\nThis won't prevent HTTP requests - let's continue...");
+        // File write permission check failed - continuing
         // Don't return - continue with the script since HTTP might still work
     }
 
@@ -917,13 +910,12 @@ function runFalVideoGenerator() {
 
         // Setup event handlers
         generateButton.onClick = function() {
-            // Immediate debug alert to confirm button click
-            alert("🔧 DEBUG: Generate button was clicked!");
+            // Generate button clicked
 
             var prompt = textInput.text;
             var trimmedPrompt = trimString(prompt);
 
-            alert("🔧 DEBUG: Prompt captured - Length: " + (prompt ? prompt.length : 0) + " | Text: " + (prompt ? prompt.substring(0, 50) : "empty"));
+            // Prompt captured
 
             logger.info("USER_ACTION", "Generate button clicked", {
                 promptLength: prompt ? prompt.length : 0,
@@ -961,13 +953,7 @@ function runFalVideoGenerator() {
                     generate_audio: true
                 };
 
-                alert("⚙️ VIDEO GENERATION OPTIONS\n\n" +
-                      "Aspect Ratio: " + videoOptions.aspect_ratio + "\n" +
-                      "Duration: " + videoOptions.duration + "\n" +
-                      "Resolution: " + videoOptions.resolution + "\n" +
-                      "Enhance Prompt: " + videoOptions.enhance_prompt + "\n" +
-                      "Generate Audio: " + videoOptions.generate_audio + "\n\n" +
-                      "Prompt: " + trimmedPrompt.substring(0, 100) + (trimmedPrompt.length > 100 ? "..." : ""));
+                // Video generation options configured
 
                 logger.info("VIDEO_OPTIONS", "Video options prepared", {
                     aspect_ratio: videoOptions.aspect_ratio,
@@ -989,14 +975,14 @@ function runFalVideoGenerator() {
                 statusText.text = "📡 Making HTTP request to FAL AI...";
                 dialog.update();
 
-                alert("🎬 CALLING FAL AI API\nStarting video generation request...\nThis will show detailed HTTP tracking...");
+                // Calling FAL AI API
 
                 var startTime = new Date().getTime();
                 var response = falClient.generateVideo(trimmedPrompt, videoOptions);
                 var endTime = new Date().getTime();
                 var requestDuration = endTime - startTime;
 
-                alert("⏱️ REQUEST COMPLETED\n\nTotal time: " + requestDuration + "ms\nResponse received: " + (response && response.success ? "SUCCESS" : "FAILED"));
+                // API request completed
 
                 // Get response keys manually for ExtendScript
                 var responseKeys = [];
@@ -1055,19 +1041,7 @@ function runFalVideoGenerator() {
                             optionsUsed: simpleStringify(videoOptions)
                         });
 
-                        alert(
-                            "🎉 SUCCESS! Video generated and layer created!\n\n" +
-                            "📹 Layer Name: " + videoLayer.name + "\n" +
-                            "📍 Layer Index: " + videoLayer.index + "\n" +
-                            "⏱️ Duration: " + videoOptions.duration + "\n" +
-                            "📐 Aspect Ratio: " + videoOptions.aspect_ratio + "\n" +
-                            "🎯 Prompt: " + trimmedPrompt.substring(0, 100) + (trimmedPrompt.length > 100 ? "..." : "") + "\n" +
-                            "🔗 Video URL: " + videoUrl + "\n" +
-                            "⏰ Generation Time: " + requestDuration + "ms\n\n" +
-                            "📋 Check console/alerts for detailed HTTP logs and debugging information!\n" +
-                            "✅ Real HTTP POST request sent to FAL AI Veo3 API",
-                            "Video Generation Complete!"
-                        );
+                        alert("🎉 Video generated successfully!\n\nLayer: " + videoLayer.name + "\nDuration: " + videoOptions.duration + "\nSaved to Desktop for permanent access");
 
                     } else {
                         logger.error("URL_MISSING", "No video URL found in successful response", {
