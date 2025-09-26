@@ -1,0 +1,28 @@
+{
+  "id": "com.aftereffects.texteditor",
+  "name": "Text Editor Extension",
+  "version": "1.0.0",
+  "host": [
+    {
+      "app": "AE",
+      "minVersion": "24.0.0"
+    }
+  ],
+  "main": "index.html",
+  "uiEntry": {
+    "type": "panel",
+    "id": "textEditorPanel"
+  },
+  "requiredPermissions": {
+    "webview": {
+      "allow": "yes",
+      "domains": ["*"]
+    },
+    "ipc": {
+      "enablePluginCommunication": true
+    },
+    "network": {
+      "domains": ["*"]
+    }
+  }
+}
